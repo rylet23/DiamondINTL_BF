@@ -1,0 +1,39 @@
+<!-- To run go to file and click open with browser(chrome) the inspect console to see console.log functions - file:///C:/Users/rylet/Attempt2/pyscriptAttempt1/PyHTML.html -->
+
+    {% extends "directory.html" %}
+    {% block content %}
+<head>
+
+    <title>Home Page</title>
+
+    <style>
+
+        body{
+            margin: 0px;
+            background-color: white;
+            color: #0026FF;
+        }
+
+        .darkButton {
+            background-color: black;
+        }
+
+        main{
+            margin: 20px;
+        }
+    </style>
+    
+</head>
+<body>
+<main>
+<h1>my pyscript html page</h1>
+<p>this is my first page:</p>
+<p2 id = "TimeTicker"></p2>
+<body onload = "TimeDisplay()">
+</main>
+<script>
+    
+</script>
+
+</body>
+{% endblock%}

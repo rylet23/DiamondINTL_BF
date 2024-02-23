@@ -1,0 +1,62 @@
+
+    {% extends "directory.html" %}
+    {% block content %}
+<head>
+    <title>
+        Settings
+    </title>
+
+</head>
+
+    
+<style>
+body {
+    padding: 20px
+    background-color: white;
+    color: #0026FF;
+    font-size: 20px;
+    margin: 0px;
+}
+main{
+    margin: 20px;
+}
+.darkButton {
+    background-color: black;
+}
+.buttonbody{
+    float:right;
+    background-color: white;
+    margin-top : 0px;
+    font-size: 12px;
+}
+
+</style>
+
+<body>
+    <button class="buttonbody" onclick="darkfun()">Dark/Light Mode</button>
+<main>
+    
+<div class="main">
+    <h1> The settings page</h1>
+    <h3> Other sub settings go here</h3>
+</div>
+
+
+<script>
+function darkfun() {
+   var element = document.body;
+   element.classList.toggle("darkButton");
+
+   if (element.classList.contains("darkButton")){
+    localStorage.setItem('darkMode', 'enabled');
+   }
+   else{
+    localStorage.setItem('darkMode', 'disabled');
+   }
+}
+
+</script>
+
+</body>
+{% endblock%}
+
