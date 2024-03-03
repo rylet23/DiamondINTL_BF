@@ -2,3 +2,5 @@ node_modules/
 __pycache__/
 passwords.py
 company_tickers.json
+.env
+python-docs-samples/

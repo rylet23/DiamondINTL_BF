@@ -1,5 +1,5 @@
 
-    {% extends "directory.html" %}
+    {% extends "direct/directory.html" %}
     {% block content %}
 <head>
     <title>
@@ -11,9 +11,8 @@
     
 <style>
 body {
-    padding: 20px
     background-color: white;
-    color: #0026FF;
+    color: black;
     font-size: 20px;
     margin: 0px;
 }
@@ -22,12 +21,17 @@ main{
 }
 .darkButton {
     background-color: black;
+    color: white;
+
 }
 .buttonbody{
     float:right;
     background-color: white;
-    margin-top : 0px;
+    position: top;
+    margin-top: 4px;
+    margin-right: 4px;
     font-size: 12px;
+    border: 1px solid black;
 }
 
 </style>

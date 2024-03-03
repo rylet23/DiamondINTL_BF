@@ -1,21 +1,27 @@
+{% extends "direct/directory.html" %}
+{% include 'direct/directscroll.html' %}
 
-    {% extends "directory.html" %}
     {% block content %}
 <head>
+    
     <title>The PlayGround</title>
-    <input id = "MySearch" onkeyup='searchTable()' type='text' placeholder="Find a stock by ticker" class="searchbox">
+    
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
 </head>
 <body>
-
+<div class "headercont">
     <div class="PageText">
-        <h1>You have entered the PlayGround</h1>
+        <h1>This is the current trades page</h1>
         <h2>here is live stock data</h2>
     </div>
-
+    <input id = "MySearch" onkeyup='searchTable()' type='text' placeholder="Find a stock by ticker" class="searchbox">
+</div>
+    <!--Change logo here
     <div class="LogoShape">
-        <img src="https://res.cloudinary.com/dhm3ad26h/image/upload/v1707455178/dsplmbnrnxgxkdz59rze.png">
+        <img src="https://res.cloudinary.com/dhm3ad26h/image/upload/v1708754621/eapp7olcezcu4olawlu6.png">
     </div>
+-->
     <div class="content">
         <table id= "StockTable" class = "tablecss">
         
@@ -31,14 +37,14 @@
             </tr>
             {% for row in rows %}
             <tr>
-                <td>{{ row['ticker'] }}</td>
-                <td>{{ row['price'] }}</td>
-                <td>{{ row['open_price'] }}</td>
-                <td>{{ row['yesterday_price'] }}</td>
-                <td>{{ row['day_ago_price'] }}</td>
-                <td>{{ row['delta_today'] }}</td>
-                <td>{{ row['delta_yesterday'] }}</td>
-                <td>{{ row['delta_total'] }}</td>
+                <td>{{ row.ticker }}</td>
+                <td>{{ row.pruh }}</td>
+                <td>{{ row.pruh_yuh_close }}</td>
+                <td>{{ row.pruh_yuh}}</td>
+                <td>{{ row.day_compare }}</td>
+                <td>{{ row.delta_today }}</td>
+                <td>{{ row.delta_yesterday }}</td>
+                <td>{{ row.delta_total}}</td>
             </tr>
             {% endfor %}
         </table>
@@ -56,43 +62,29 @@
             color: #FFFFFF;
 
         }
-   
-        .LogoShape{
-            width:48px;
-            height:48px;
-            clip-path:polygon(70% 0%, 100% 25%, 50% 100%, 0% 25%, 30% 0%);
-            display: flex;
-            justify-content:center;
-            align-items:center;
-            overflow: hidden;
-            position: center;
-            border: 4px;
-            margin: 10px;
-        }
-
-        .LogoShape img{
-            width:100%;
-            height: auto;
-            display: block;
-            border: 4px solid black;
-        }
 
         .searchbox{
-            font-size:12px;
-            border: solid black 2px;
+            position: absolute;
+            right: 2px;
+            top: 72px;
+            font-size: 12px;
+            border: solid black 1px;
             text-align: center;
-            float: right;
-            margin-right: 0px;
-            margin-top: -38px;
-            overflow: hidden;
-            padding: 10px;
+            padding: 8px;
             display: block;
+            outline: none;
         }
+
         .tablecss{
             margin: auto;
             border: solid black 0px;
-            color: #0026FF;
+            /*color: #0026FF;*/
+            /* Set this up so that it calls js function to change color on negative or green values of column delta today*/
+            color: black;
+            position: relative;
+            margin-top: 0px;
         }
+
         .tablecss th{
             border-bottom: solid grey 2px;
             padding: 10px;
@@ -105,7 +97,20 @@
 
         .PageText{
             text-align: center;
+            overflow: auto;
+            padding-top: 10px;
         }
+
+        .headercont{
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .darkButton .tablecss{
+            color: white;
+        }
+
     </style>
 
     <script>
@@ -142,8 +147,6 @@
             }
         });
         
-        
-          
     </script>
 </body>
 {% endblock%}

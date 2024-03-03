@@ -3,12 +3,16 @@ import yfinance as yf
 import time
 import json as js
 from TradingTime import TradingTime1, TradingDays
+
+from TradingTime import TradingTime1, TradingDays
 from datetime import date, timedelta
 import pandas_market_calendars as MarketDays
-# added for postgre DB
+# added for postgres DB
 import psycopg2
 import psycopg2.extras
 import os
+from keyboard import press
+
 from passwords import passpee
 key1,dbname1,user1,password1,host1 = passpee()
 
@@ -26,7 +30,7 @@ td = date.today()
 days = nyse.valid_days(start_date='2007-04-04', end_date=td)
 today_date = days[-1]
 today_date.strftime('%Y-%m-%d')
-yesterday_date = today_date - timedelta(days=1)
+yesterday_date = days[-2]
 while True:
     day_input = input("How many days ago do you want to compare the data to? ")
     try:
@@ -60,18 +64,24 @@ while True:
     except ValueError:
         print("Not a valid number, re-enter number of seconds")
 
-day_compare = today_date - timedelta(days=days_ago)
+day_compare = days[(-days_ago) - 1]
 #Include APISHI//company_tickers.json when running within full system
-file_path = 'company_tickers.json'
+file_path = 'APISHI//company_tickers.json'
 with open(file_path, 'r') as JSONfile:
     tickers_data = js.load(JSONfile)
     con = psycopg2.connect(dbname=dbname1, user=user1, password=password1, host=host1)
 curr = con.cursor()
+
+# Temporary Execution to fix chart - it fucks up and doesnt changerow amount, only updates chosen data(ex: will only update 5 if stockEX = 5)
+# curr.execute('DROP TABLE IF EXISTS StockInfo1')
 curr.execute('CREATE TABLE IF NOT EXISTS StockInfo1 (Ticker TEXT PRIMARY KEY, Price REAL, Open_Price REAL, Yesterday_Price REAL, Day_Ago_Price REAL, Delta_Today REAL, Delta_Yesterday REAL, Delta_Total REAL)')
+curr.execute('CREATE TABLE IF NOT EXISTS Scroltable (Max REAL, Min REAL, MaxSymbol VARCHAR, MinSymbol VARCHAR)')
+
 con.commit()
 def stocktable():
     count = 0
-
+    max1 = float("-inf")
+    min1 = float('inf')
     for ticker_info in tickers_data.values():
         count+=1
         if count <= Numb_Stocks:
@@ -93,6 +103,15 @@ def stocktable():
 
                 delta_total = ((pruh - pruh_whenever) / pruh_whenever) * 100
                 
+
+                if delta_total > max1:
+                    max1 = delta_total
+                    maxsymbol = symbolz
+
+                if delta_total < min1:
+                    min1 = delta_total
+                    minsymbol = symbolz
+
                 curr.execute('''INSERT INTO StockInfo1 (Ticker, Price, Open_Price, Yesterday_Price, Day_Ago_Price, Delta_Today, Delta_Yesterday, Delta_Total) VALUES (%s, %s, %s, %s, %s, %s, %s, %s) ON CONFLICT (Ticker) DO UPDATE SET Price = EXCLUDED.Price, Open_Price = EXCLUDED.Open_Price, Yesterday_Price = EXCLUDED.Yesterday_Price, Day_Ago_Price = EXCLUDED.Day_Ago_Price, Delta_Today = EXCLUDED.Delta_Today, Delta_Yesterday = EXCLUDED.Delta_Yesterday, Delta_Total = EXCLUDED.Delta_Total''', (symbolz, pruh, pruh_yuh_close, pruh_yuh, pruh_whenever, delta_today, delta_yesterday, delta_total))
                 # print(pruh +":" + symbolz)
                 con.commit()
@@ -101,18 +120,26 @@ def stocktable():
             except Exception as e:
                 print(f"Error processing {symbolz}: {str(e)}")
                 continue
+    
+    curr.execute('''INSERT INTO Scroltable (Max, Min, MaxSymbol, MinSymbol) VALUES (%s, %s, %s, %s)''', (max1, min1, maxsymbol, minsymbol))
+    curr.execute('SELECT * FROM StockInfo1 ORDER BY Ticker ASC')
 
+    con.commit()
+    
+    return max1, min1, maxsymbol, minsymbol
 
 while Is_TradingHours() and TradingDays():
     stocktable()
+    con.commit()
     print("Going thru again in " + str(sec_wait) + " seconds.")
     time.sleep(sec_wait)
 else:
     still_work = input("Outside trading hours, do you still want to execute?(yes or no)? ")
     if still_work == 'yes':
-        curr.execute('DROP TABLE IF EXISTS StockInfo1')
-        curr.execute('CREATE TABLE StockInfo1 (Ticker TEXT PRIMARY KEY, Price REAL, Open_Price REAL, Yesterday_Price REAL, Day_Ago_Price REAL, Delta_Today REAL, Delta_Yesterday REAL, Delta_Total REAL)')
         stocktable()
         print("After hours information displayed.")
     else:
         print("Okay")
+# while True:
+#     stocktable()
+#     time.sleep(sec_wait)

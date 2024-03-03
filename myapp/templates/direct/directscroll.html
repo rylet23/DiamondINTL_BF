@@ -1,0 +1,43 @@
+
+<!--Replace text with scipt import of most moved stocks, called via python???-->
+
+<marquee class="scrollthingy" behavior="scroll" direction="right" scrollamount='5'>
+    <span id="marqueeContent">Loading stock data...</span>
+</marquee>
+<body>
+<style>
+    .scrollthingy{
+        top: 46px;
+        position: absolute;
+        border-bottom: 1px dotted black;
+        padding-top: 2px;
+        padding-bottom: 2px;
+        font-family: Helvetica, Arial, sans-serif;
+        text-decoration: none;
+        font-size: 18px;
+        background-color: rgba(191,191,191,.5);
+    }
+    .darkButton .scrollthingy{
+        border-bottom: 1px solid #0C026E;
+
+    }
+
+</style>
+</body>
+<script>
+    window.onload = function(){
+        callPythonFunction();
+    };
+    function callPythonFunction() {
+        fetch('/scrolly')
+          .then(response => response.json())
+          .then(data => {
+              document.getElementById('marqueeContent').innerHTML = data.message; 
+          })
+          .catch(error => console.error(error));
+    }
+</script>
+
+
+{% block content%}
+{% endblock%}

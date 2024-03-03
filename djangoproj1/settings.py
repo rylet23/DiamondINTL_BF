@@ -1,6 +1,8 @@
 import os
-from passwords import passpee
-key1,dbname1,user1,password1,host1 = passpee()
+from pathlib import Path
+from dotenv import load_dotenv
+# from passwords import passpee
+# key1,dbname1,user1,password1,host1 = passpee()
 
 """
 Django settings for djangoproj1 project.
@@ -14,7 +16,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
-from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -24,13 +25,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-s3iq+kr+m!@jw&rh+94z#c%p-q&vn8r95!1xj1zndv_6-))u_k'
+
+load_dotenv()
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-ALLOWED_HOSTS = []
-
+# When running on admin server via cloud use : ['34.74.14.182','127.0.0.1'] or []
+ALLOWED_HOSTS = ['34.74.14.182', '127.0.0.1', 'localhost', 'https://diamondintl1project.uc.r.appspot.com', 'https://diamondinternational.org/']
+# APPEND_SLASH = True
 
 # Application definition
 
@@ -41,7 +44,19 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'compressor',
+    'myapp',
+    # 'allauth.socialaccount.providers.amazon',
+    # 'allauth.socialaccount.providers.apple',
+    # 'allauth.socialaccount.providers.github',
+    'allauth.socialaccount.providers.google',
+    # 'allauth.socialaccount.providers.microsoft',
+
 ]
+SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -51,14 +66,23 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = 'djangoproj1.urls'
 
+ 
+COMPRESS_ROOT = BASE_DIR / 'static'
+ 
+COMPRESS_ENABLED = True
+ 
+STATICFILES_FINDERS = ('compressor.finders.CompressorFinder',)
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
+        # 'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -77,113 +101,132 @@ WSGI_APPLICATION = 'djangoproj1.wsgi.application'
 # ALL DATABASES - Others created need to be followed thru with in the PGADMIN app, like actually make the databases so they can execute properly.
 DATABASES = {
     
-    'default':{},
-    "Stocks": {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME' : dbname1,
-        'USER': user1,
-        'PASSWORD': password1,
-        'HOST':host1,
-        'PORT':"5432",
+    'default':{
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME' : os.getenv('DB_NAME'),
+        'USER': os.getenv('DB_USER'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST':os.getenv('DB_HOST', 'localhost'),
+        'PORT':os.getenv('DB_PORT', '5432'),
     },
-    "ETFS":{
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME' : 'ETFInfo1',
-        'USER': user1,
-        'PASSWORD': password1,
-        'HOST':host1,
-        'PORT':"5432",
-    },
-    'Options':{
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME' : 'OptionInfo1',
-        'USER': user1,
-        'PASSWORD': password1,
-        'HOST':host1,
-        'PORT':"5432",
-    },
-        "MutualFunds":{
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME' : 'MutualFundInfo1',
-        'USER': user1,
-        'PASSWORD': password1,
-        'HOST':host1,
-        'PORT':"5432",
-    },
-        'REITS':{
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME' : 'REITInfo1',
-        'USER': user1,
-        'PASSWORD': password1,
-        'HOST':host1,
-        'PORT':"5432",
-    },
-    'Crypto':{
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME' : 'CryptoInfo1',
-        'USER': user1,
-        'PASSWORD': password1,
-        'HOST':host1,
-        'PORT':"5432",
-    },
-    'Bonds':{
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME' : 'BondInfo1',
-        'USER': user1,
-        'PASSWORD': password1,
-        'HOST':host1,
-        'PORT':"5432",
-    },
+    #Same as above but default required, maybe switch with blank sql database later?
+    # "Stocks": {
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME' : dbname1,
+    #     'USER': user1,
+    #     'PASSWORD': password1,
+    #     'HOST':host1,
+    #     'PORT':"5432",
+    # },
+    # "ETFS":{
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME' : 'ETFInfo1',
+    #     'USER': user1,
+    #     'PASSWORD': password1,
+    #     'HOST':host1,
+    #     'PORT':"5432",
+    # },
+    # 'Options':{
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME' : 'OptionInfo1',
+    #     'USER': user1,
+    #     'PASSWORD': password1,
+    #     'HOST':host1,
+    #     'PORT':"5432",
+    # },
+    #     "MutualFunds":{
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME' : 'MutualFundInfo1',
+    #     'USER': user1,
+    #     'PASSWORD': password1,
+    #     'HOST':host1,
+    #     'PORT':"5432",
+    # },
+    #     'REITS':{
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME' : 'REITInfo1',
+    #     'USER': user1,
+    #     'PASSWORD': password1,
+    #     'HOST':host1,
+    #     'PORT':"5432",
+    # },
+    # #End of trade section - for directory
+    # 'Crypto':{
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME' : 'CryptoInfo1',
+    #     'USER': user1,
+    #     'PASSWORD': password1,
+    #     'HOST':host1,
+    #     'PORT':"5432",
+    # },
+    # 'Bonds':{
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME' : 'BondInfo1',
+    #     'USER': user1,
+    #     'PASSWORD': password1,
+    #     'HOST':host1,
+    #     'PORT':"5432",
+    # },
 
-    "PersonalPortfolio":{
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME' : 'PortfolioInfo1',
-        'USER': user1,
-        'PASSWORD': password1,
-        'HOST':host1,
-        'PORT':"5432",
-    },
+    # "Gold":{
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME' : 'GoldInfo1',
+    #     'USER': user1,
+    #     'PASSWORD': password1,
+    #     'HOST':host1,
+    #     'PORT':"5432",
+    # },
+    # "Silver":{
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME' : 'SilverInfo1',
+    #     'USER': user1,
+    #     'PASSWORD': password1,
+    #     'HOST':host1,
+    #     'PORT':"5432",
+    # },
+    # # Section for personal account -  for directory
+    #     "PersonalPortfolio":{
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME' : 'PortfolioInfo1',
+    #     'USER': user1,
+    #     'PASSWORD': password1,
+    #     'HOST':host1,
+    #     'PORT':"5432",
+    # },
+    #     "Cash":{
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME' : 'CashInfo1',
+    #     'USER': user1,
+    #     'PASSWORD': password1,
+    #     'HOST':host1,
+    #     'PORT':"5432",
+    # },
+    # #Sign-In info
+    # 'UserInfo':{
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME' : 'UserInfo1',
+    #     'USER': user1,
+    #     'PASSWORD': password1,
+    #     'HOST':host1,
+    #     'PORT':"5432",
+    # },
+    # # End of personal account information
 
-    "Gold":{
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME' : 'GoldInfo1',
-        'USER': user1,
-        'PASSWORD': password1,
-        'HOST':host1,
-        'PORT':"5432",
-    },
-    "Silver":{
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME' : 'SilverInfo1',
-        'USER': user1,
-        'PASSWORD': password1,
-        'HOST':host1,
-        'PORT':"5432",
-    },
-    "Cash":{
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME' : 'CashInfo1',
-        'USER': user1,
-        'PASSWORD': password1,
-        'HOST':host1,
-        'PORT':"5432",
-    },
-    #Sign-In info
-    'UserInfo':{
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME' : 'UserInfo1',
-        'USER': user1,
-        'PASSWORD': password1,
-        'HOST':host1,
-        'PORT':"5432",
-    },
-    #Investments in people directly and all allocated assets
+    # #Investments in people directly and all allocated assets
 
-    "PeopleInvestments":{},
-    "AvailPeople":{},
+    # "PeopleInvestments":{},
+    # "AvailPeople":{},
 
 
 }
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by email
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -219,9 +262,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
+    BASE_DIR / 'static',
+    # os.path.join(BASE_DIR, 'static'),
 ]
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

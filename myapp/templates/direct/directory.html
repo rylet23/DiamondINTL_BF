@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="jquery-3.7.1.min.js"></script>
+</head>
+
+<body>
+<style>
+    body{ 
+        font-family: Helvetica, Arial, sans-serif;
+        margin: 0px;
+    }
+    .LogoShape{
+        width:36px;
+        height:36px;
+        min-width: 36px;
+        min-height: 36px;
+        clip-path:polygon(70% 0%, 100% 25%, 50% 100%, 0% 25%, 30% 0%);
+        display: flex;
+        justify-content:center;
+        align-items:center;
+        overflow: hidden;
+        margin-top: 2px;
+        margin-left: 20px;
+        margin-bottom: 2px;
+        position: sticky;
+        overflow-x: auto; 
+        overflow-y: hidden; 
+        white-space: nowrap; 
+        margin-right: 20px;
+    }
+    
+    .LogoShape img{
+        width:100%;
+        height: auto;
+        display: block;
+    
+    }
+    
+    .Directory ul{
+    list-style-type : none;
+    background-color : #3EC8FF;
+    padding : 0px;
+    margin: 0px;
+    overflow: hidden;
+    border-bottom: 1px solid black;
+    
+    }
+    .Directory a {
+    font-family: Helvetica, Arial, sans-serif;
+    text-decoration: none;
+    display: block;
+    align-items: center;
+    margin-top: 16px;
+    font-size: 12px;
+    /*Space out the wording up top by changing the 2nd element*/
+    padding: 10px 10px;
+    margin-left: 20px;
+    margin-right: 20px;
+    }    
+    .Directory a:hover{
+    color: grey;
+    
+    
+    }
+    
+    .Directory > ul > li:not(:last-child)::after {
+    content: "|";
+    position: relative;
+    color: black; 
+    margin-left: 0px;
+    top: -28px;
+    
+    }
+    .Directory ul{
+    font-size: 14px;
+    font-family: calibri;
+    color: black;
+    display: flex;
+    align-items: center;
+    overflow:auto;
+    word-wrap: break-word;
+    height: 46px;
+    overflow-x: auto; 
+    overflow-y: hidden; 
+    white-space: nowrap; 
+    }
+    #TimeTicker{
+    font-family: Helvetica, Arial, sans-serif;
+    word-wrap: break-word;
+    padding-right: 20px;
+    margin-left: auto;
+    font-size: 12px;
+    }
+    .darkButton #TimeTicker{
+        color: white;
+    }
+    .darkButton {
+    background-color: black;
+    color: white;
+    }
+    
+    .darkButton .Directory > ul{
+    background-color: #0C026E;
+    }
+    .darkButton .Directory > ul > li > a{
+    color: white;
+    }
+    .Directory > ul > li > a{
+    color: black;
+    }
+    .darkButton p{
+    color: white;
+    }
+    ::-webkit-scrollbar {
+    width: 2px;
+    height: 2px;
+    }
+    
+    
+    ::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+    }
+    
+    
+    ::-webkit-scrollbar-thumb {
+    background: #888; 
+    }
+    
+    
+    ::-webkit-scrollbar-thumb:hover {
+    background: #555; 
+    }
+    /* for the trade sub menu */
+    
+    #TradeSubMenu{
+    
+    display: flex;
+    opacity: 0;
+    visibility: hidden;
+    color: white;
+    position: absolute;
+    height: auto; 
+    background-color : #696f75;
+    
+    }
+    .darkButton #TradeSubMenu li a{
+        color: white;
+    
+    }
+    #TradeSubMenu li a{
+        color: white;
+        text-align: center;
+        margin-top: 0px;
+        margin-bottom:0px;
+        border-bottom: 1px solid black;
+        margin-right:4px;
+        margin-left: 4px;
+    }
+    li:hover ul#TradeSubMenu{
+    opacity: .9;
+    top: 47px;
+    visibility: visible;
+    display: inline-block;
+    border-bottom: 0px solid black;
+    color: #404448;
+    overflow-x: visible;
+    
+    }
+    #TradeSubMenu li{
+        color: white;
+    
+    }
+    #TradeSubMenu a:hover{
+        color: black;
+     }
+     .darkButton #TradeSubMenu a:hover{
+        color: black;
+     }
+     /* For the metal sub menu */
+     #MetalSubMenu{
+    
+        display: flex;
+        opacity: 0;
+        visibility: hidden;
+        color: white;
+        position: absolute;
+        height: auto; 
+        background-color : #696f75;
+        
+        }
+        .darkButton #MetalSubMenu li a{
+            color: white;
+        
+        }
+        #MetalSubMenu li a{
+            color: white;
+            text-align: center;
+            margin-top: 0px;
+            margin-bottom:0px;
+            border-bottom: 1px solid black;
+            margin-right:26px;
+            margin-left: 26px;
+        }
+        
+        li:hover ul#MetalSubMenu{
+        opacity: .9;
+        top: 47px;
+        visibility: visible;
+        display: inline-block;
+        border-bottom: 0px solid black;
+        color: #404448;
+        overflow-x: visible;
+        
+        }
+        #MetalSubMenu li{
+            color: white;
+        
+        }
+        #MetalSubMenu a:hover{
+            color: black;
+         }
+         .darkButton #MetalSubMenu a:hover{
+            color: black;
+         }
+    /* For the portfolio Sub menu */
+    #AccountSubMenu{
+    
+        display: flex;
+        opacity: 0;
+        visibility: hidden;
+        color: white;
+        position: absolute;
+        height: auto; 
+        background-color : #696f75;
+        
+        }
+        .darkButton #AccountSubMenu li a{
+            color: white;
+        
+        }
+        #AccountSubMenu li a{
+            color: white;
+            text-align: center;
+            margin-top: 0px;
+            margin-bottom:0px;
+            border-bottom: 1px solid black;
+            margin-right:22px;
+            margin-left: 22px;
+        }
+        li:hover ul#AccountSubMenu{
+        opacity: .9;
+        top: 47px;
+        visibility: visible;
+        display: inline-block;
+        border-bottom: 0px solid black;
+        color: #404448;
+        overflow-x: visible;
+        
+        }
+        #AccountSubMenu li{
+            color: white;
+        
+        }
+        #AccountSubMenu a:hover{
+            color: black;
+         }
+         .darkButton #AccountSubMenu a:hover{
+            color: black;
+         }
+</style>
+
+<nav class="Directory">
+
+    <ul>
+        <div class="LogoShape">
+            <img src="https://res.cloudinary.com/dhm3ad26h/image/upload/v1707455178/dsplmbnrnxgxkdz59rze.png">
+            
+        </div>
+            <li class="accountitem">
+                <a href="http://127.0.0.1:8000/account">Account</a>
+                <ul id="AccountSubMenu">
+                    <li><a href="http://127.0.0.1:8000/account/portfolio">Portfolio</a></li>
+                    <li><a href="http://127.0.0.1:8000/account/settings">Settings</a></li>
+                </ul>
+            </li>
+
+
+                <li class="tradeitem">
+                <a href="http://127.0.0.1:8000/trades">Trades</a>
+                <ul id="TradeSubMenu">
+                    <li><a href="http://127.0.0.1:8000/trades/etfs">ETFS</a></li>
+                    <li><a href="http://127.0.0.1:8000/trades/options">Options</a></li>
+                    <li><a href="http://127.0.0.1:8000/trades/mutualfunds">Mutual Funds</a></li>
+                    <li><a href="http://127.0.0.1:8000/trades/reits">REITs</a></li>
+                </ul>
+            </li>
+        
+            <li><a href="http://127.0.0.1:8000/crypto">Crypto</a></li>
+            <li><a href="http://127.0.0.1:8000/bonds">Bonds</a></li>
+            
+
+                <li class="metalitem">
+                <a href="http://127.0.0.1:8000/metals/">Metals</a>
+                <ul id="MetalSubMenu">
+                    <li><a href="http://127.0.0.1:8000/metals/gold/">Gold</a></li>
+                    <li><a href="http://127.0.0.1:8000/metals/silver/">Silver</a></li>
+                </ul>
+            </li>
+
+            <!--Time display portion-->
+            
+            <li id = "TimeTicker"></li>
+            <body onload = "TimeDisplay()">
+        
+    </ul>
+</nav>
+<script>
+    function TimeDisplay(){
+        const date = new Date();
+        document.getElementById('TimeTicker').innerHTML = date/*.toLocaleTimeString();*/
+        timewait = setTimeout('TimeDisplay()', 500);
+    }
+    
+    document.addEventListener('DOMContentLoaded', (event) => {
+        if (localStorage.getItem('darkMode') === 'enabled') {
+            document.body.classList.add("darkButton");
+        }
+    });
+</script>    
+</body>
+{% block content%}
+{% endblock%}
+</html>
